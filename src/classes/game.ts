@@ -1,6 +1,5 @@
 import Player from "./player";
 import * as PIXI from "pixi.js";
-import { getRandomArbitrary } from "../utils/random";
 
 class Game {
   app: PIXI.Application;
@@ -24,14 +23,16 @@ class Game {
     this.players = [];
   }
 
-  addPlayer = (name: string) => {
-    const player = new Player(
-      name,
-      getRandomArbitrary(100, this.appWidth - 100),
-      getRandomArbitrary(100, this.appHeight - 100),
-      this.container
-    );
+  addPlayer = (name: string, x: number, y: number) => {
+    const player = new Player(name, x, y, this.container);
     this.players.push(player);
+  };
+
+  removePlayers = () => {
+    this.players = [];
+    this.app.stage.removeChildren();
+    this.container = new PIXI.Container();
+    this.app.stage.addChild(this.container);
   };
 }
 

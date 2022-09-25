@@ -5,14 +5,41 @@ import { baseURL } from "./constants";
 
 const loginButton = document.getElementById("login-button");
 
-const startGame = () => {
-  const game = new Game(800, 600);
+interface Player {
+  Username: string;
+  PositionX: number;
+  PositionY: number;
+}
 
+const startGame = () => {
+  const socket = new WebSocket("wss://ff1d-87-247-67-226.ngrok.io/Game");
+  const token = localStorage.getItem("token");
+  const game = new Game(800, 600);
   const app = document.getElementById("app");
   app?.appendChild(game.app.view);
 
-  game.addPlayer("player1");
-  game.addPlayer("player2");
+  socket.addEventListener("open", () => {
+    socket.send(`LOGIN;${token}`);
+  });
+
+  socket.addEventListener("message", (event) => {
+    const data: { Type: string } = JSON.parse(event.data);
+    switch (data.Type) {
+      case "LOGIN": {
+        socket.send(`GETGAME`);
+        break;
+      }
+      case "PLAYERS": {
+        game.removePlayers();
+
+        const parsedData = data as { Type: string; Players: Player[] };
+
+        parsedData.Players.forEach((player) => {
+          game.addPlayer(player.Username, player.PositionX, player.PositionY);
+        });
+      }
+    }
+  });
 };
 
 const init = () => {
@@ -41,16 +68,4 @@ const init = () => {
   });
 };
 
-// init();
-
-const socket = new WebSocket("wss://ff1d-87-247-67-226.ngrok.io/Game");
-
-// Connection opened
-socket.addEventListener("open", (event) => {
-  socket.send("Hello Server!");
-});
-
-// Listen for messages
-socket.addEventListener("message", (event) => {
-  console.log("Message from server ", event.data);
-});
+init();
