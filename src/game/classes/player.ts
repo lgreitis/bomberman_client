@@ -27,6 +27,11 @@ class Player {
     this.x = x;
     this.y = y;
   }
+
+  move = (x: number, y: number) => {
+    this.sprite.x = x;
+    this.sprite.y = y;
+  };
 }
 
 export default Player;

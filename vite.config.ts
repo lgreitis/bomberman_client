@@ -1,13 +1,19 @@
 import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
+// https://vitejs.dev/config/
 export default defineConfig({
-  server: {
-    proxy: {
-      "/auth": {
-        ws: true,
-        changeOrigin: true,
-        target: "https://ff1d-87-247-67-226.ngrok.io/",
+  plugins: [
+    react({
+      jsxImportSource: "@emotion/react",
+      babel: {
+        plugins: ["@emotion/babel-plugin"],
       },
+    }),
+  ],
+  server: {
+    cors: {
+      allowedHeaders: "*",
     },
   },
 });
