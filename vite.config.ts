@@ -16,4 +16,7 @@ export default defineConfig({
       allowedHeaders: "*",
     },
   },
+  esbuild: {
+    logOverride: { "this-is-undefined-in-esm": "silent" },
+  },
 });

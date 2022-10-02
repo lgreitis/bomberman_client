@@ -24,3 +24,8 @@ export type MoveDirection =
   | "ArrowLeft"
   | "ArrowUp"
   | "ArrowDown";
+
+export interface Lobby {
+  lobbyId: number;
+  isFull: boolean;
+}

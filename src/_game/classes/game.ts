@@ -4,6 +4,18 @@ import Input from "./input";
 import SocketHandler from "./socketHandler";
 import { PlayerData, ResponsePayload } from "../../types";
 
+interface GameData {
+  LobbyId: number;
+  Players: {
+    IsConnected: boolean;
+    LocationX: number;
+    LocationY: number;
+    Token: string;
+    UserId: string;
+    Username: string;
+  }[];
+}
+
 class Game {
   app: PIXI.Application;
   container: PIXI.Container;
@@ -13,12 +25,14 @@ class Game {
   players: Player[];
   currentPlayerName: string;
   input: Input;
+  lobbyId: number;
 
   constructor(
     width: number,
     height: number,
-    socket: WebSocket,
-    username: string
+    username: string,
+    socketHandler: SocketHandler,
+    lobbyId: number
   ) {
     this.app = new PIXI.Application({
       width,
@@ -35,30 +49,31 @@ class Game {
     this.container.y = this.app.screen.height / 2;
     this.app.stage.addChild(this.container);
     this.players = [];
-    this.socket = new SocketHandler(socket, username);
+    this.socket = socketHandler;
     this.input = new Input(this.socket);
+    this.lobbyId = lobbyId;
 
     this.socket.sendConnectCommand();
 
     this.socket.socket.addEventListener("message", (event) => {
       const data: ResponsePayload = JSON.parse(event.data);
-      console.log(data);
+
       switch (data.ResponseId) {
         case "GameUpdate":
-          console.log("GameUpdate");
-          this.updatePlayers(data.Data.Players);
+          console.log("GameUpdate", data.Data);
+          data.Data.Games.map((game: GameData) => {
+            if (game.LobbyId === this.lobbyId) {
+              this.updatePlayers(game.Players);
+            }
+          });
+
           break;
       }
     });
-
-    // this.app.ticker.add((delta) => {
-    //   // rotate the container!
-    //   // use delta to create frame-independent transform
-    //   // this.container.rotation -= 0.01 * delta;
-    // });
   }
 
   updatePlayers = (players: PlayerData[]) => {
+    console.log({ test: "updating players", players });
     this.players = [];
 
     this.container = new PIXI.Container();

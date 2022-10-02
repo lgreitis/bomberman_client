@@ -1,7 +1,7 @@
 import { css } from "@emotion/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { authApi } from "../features/auth/authApi";
+import { authService } from "../features/auth/auth.service";
 import { login } from "../features/auth/userSlice";
 import { useAppDispatch } from "../store";
 
@@ -14,7 +14,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleSubmit = () => {
-    authApi
+    authService
       .login(username, password)
       .then((val) => {
         if (val.data.success) {

@@ -24,4 +24,4 @@ const login = (username: string, password: string) => {
   });
 };
 
-export const authApi = { login, register };
+export const authService = { login, register };
