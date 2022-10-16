@@ -26,6 +26,7 @@ export const userSlice = createSlice({
       localStorage.removeItem("token");
       state.token = initialState.token;
       state.username = initialState.username;
+      window.location.reload();
     },
   },
 });
