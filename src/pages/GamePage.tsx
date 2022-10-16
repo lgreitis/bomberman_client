@@ -1,16 +1,15 @@
 import { css } from "@emotion/react";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { GAME_WS_URL } from "../constants";
-import { selectUser } from "../features/auth/userSlice";
-import { lobbyService } from "../features/lobby/lobby.service";
+import { useDispatch, useSelector } from "react-redux";
+import Button from "../common/Button";
+import { logout, selectUser } from "../features/auth/userSlice";
 import LobbyView from "../features/lobby/LobbyView";
-import { Lobby } from "../types";
 import Game from "../_game/classes/game";
 import SocketHandler from "../_game/classes/socketHandler";
 
 const GamePage = () => {
   const user = useSelector(selectUser);
+  const dispatch = useDispatch();
   const [lobby, setLobby] = useState<number | undefined>();
   const [connectionLobby, setConnectionLobby] = useState<number | undefined>();
   const [socketHandler, setSocketHandler] = useState(
@@ -20,17 +19,9 @@ const GamePage = () => {
   const [started, setStarted] = useState<boolean>(false);
 
   useEffect(() => {
-    // let joined = false;
     socketHandler.socket.addEventListener("open", () => {
       socketHandler.onStart((lobbyId) => {
         setConnectionLobby(lobbyId);
-        // console.log("STARTED!!!", lobbyId, lobby, joined);
-        // if (lobbyId === lobby && !joined) {
-        //   joined = true;
-        //   socketHandler.connectToGameWs();
-        //   const game = new Game(800, 600, user.username, socketHandler);
-        //   gameDiv.appendChild(game.app.view);
-        // }
       });
     });
   }, []);
@@ -49,27 +40,58 @@ const GamePage = () => {
         gameDiv.appendChild(game.app.view);
       });
     }
+
+    return () => {
+      gameDiv.innerHTML = "";
+    };
   }, [lobby, connectionLobby]);
 
   return (
-    <div
-      id="game"
-      css={css`
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      `}
-    >
-      {!lobby && (
-        <LobbyView
-          onJoin={(lobbyId) => {
-            setLobby(lobbyId);
-            socketHandler.sendJoinCommand(lobbyId, user.token);
+    <>
+      <div
+        css={css`
+          display: flex;
+          justify-content: right;
+          align-items: center;
+          gap: 10px;
+          padding: 5px;
+        `}
+      >
+        <div
+          css={css`
+            font-size: large;
+          `}
+        >
+          Username: {user.username}
+        </div>
+        <button
+          css={Button}
+          onClick={() => {
+            dispatch(logout());
           }}
-        />
-      )}
-      {lobby && !started && <h1>Waiting for players...</h1>}
-    </div>
+        >
+          Logout
+        </button>
+      </div>
+      <div
+        id="game"
+        css={css`
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        `}
+      >
+        {!lobby && (
+          <LobbyView
+            onJoin={(lobbyId) => {
+              setLobby(lobbyId);
+              socketHandler.sendJoinCommand(lobbyId, user.token);
+            }}
+          />
+        )}
+        {lobby && !started && <h1>Waiting for players...</h1>}
+      </div>
+    </>
   );
 };
 

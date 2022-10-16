@@ -23,8 +23,7 @@ import store from "./store";
 // );
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  // <React.StrictMode>
-  <>
+  <React.StrictMode>
     <Global
       styles={css`
         html,
@@ -40,6 +39,5 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         <App />
       </BrowserRouter>
     </Provider>
-  </>
-  // </React.StrictMode>
+  </React.StrictMode>
 );

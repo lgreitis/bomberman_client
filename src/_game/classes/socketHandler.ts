@@ -1,5 +1,6 @@
 import { GAME_WS_URL, LOBBY_WS_URL } from "../../constants";
 import { MoveDirection, Payload, ResponsePayload } from "../../types";
+import { Inputs } from "./input";
 
 class SocketHandler {
   socket: WebSocket;
@@ -47,15 +48,15 @@ class SocketHandler {
     this.socket.send(JSON.stringify(payload));
   };
 
-  sendMoveCommand = (dir: MoveDirection) => {
+  sendMoveCommand = (inputs: Inputs) => {
     const payload: Payload = {
       CommandId: "MOVE",
       Data: {
         Token: this.token,
-        PositiveX: dir === "ArrowRight",
-        NegativeX: dir === "ArrowLeft",
-        PositiveY: dir === "ArrowDown",
-        NegativeY: dir === "ArrowUp",
+        PositiveX: inputs.ArrowRight,
+        NegativeX: inputs.ArrowLeft,
+        PositiveY: inputs.ArrowDown,
+        NegativeY: inputs.ArrowUp,
       },
     };
 
@@ -65,7 +66,6 @@ class SocketHandler {
   onStart = (cb: (lobbyId: number) => void) => {
     this.socket.addEventListener("message", (event) => {
       const data: ResponsePayload = JSON.parse(event.data);
-      console.log(data);
       if (data.ResponseId === "StartGame") {
         cb(data.Data.LobbyId);
       }

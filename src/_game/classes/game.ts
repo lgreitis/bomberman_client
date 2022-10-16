@@ -26,6 +26,7 @@ class Game {
   currentPlayerName: string;
   input: Input;
   lobbyId: number;
+  gameData: GameData | null;
 
   constructor(
     width: number,
@@ -52,6 +53,7 @@ class Game {
     this.socket = socketHandler;
     this.input = new Input(this.socket);
     this.lobbyId = lobbyId;
+    this.gameData = null;
 
     this.socket.sendConnectCommand();
 
@@ -60,51 +62,51 @@ class Game {
 
       switch (data.ResponseId) {
         case "GameUpdate":
-          console.log("GameUpdate", data.Data);
           data.Data.Games.map((game: GameData) => {
             if (game.LobbyId === this.lobbyId) {
-              this.updatePlayers(game.Players);
+              this.gameData = game;
             }
           });
 
           break;
       }
     });
-  }
-
-  updatePlayers = (players: PlayerData[]) => {
-    console.log({ test: "updating players", players });
-    this.players = [];
 
     this.container = new PIXI.Container();
     this.container.x = this.app.screen.width / 2;
     this.container.y = this.app.screen.height / 2;
-    this.app.stage.removeChildren();
     this.app.stage.addChild(this.container);
 
-    players.forEach((element) => {
-      // const player = this.players.find((x) => x.name === element.Username);
-      // if (!player) {
-      this.addPlayer(element.Username, element.LocationX, element.LocationY);
-      //   } else {
-      //     player.move(player.x, player.y);
-      //   }
-    });
+    this.app.ticker.add(this.gameLoop);
+  }
 
-    // this.app.stage.removeChildren();
-    // this.container.();
+  gameLoop = () => {
+    if (!this.gameData) {
+      return;
+    }
+
+    this.updatePlayers(this.gameData.Players);
+  };
+
+  updatePlayers = (players: PlayerData[]) => {
+    players.forEach((player) => {
+      this.updatePlayer(player);
+    });
+  };
+
+  updatePlayer = (player: PlayerData) => {
+    const fplayer = this.players.findIndex((x) => x.name === player.Username);
+
+    if (fplayer === -1) {
+      this.addPlayer(player.Username, player.LocationX, player.LocationY);
+    } else {
+      this.players[fplayer].move(player.LocationX, player.LocationY);
+    }
   };
 
   addPlayer = (name: string, x: number, y: number) => {
     const player = new Player(name, x, y, this.container);
     this.players.push(player);
-  };
-
-  removePlayers = () => {
-    this.players = [];
-    this.app.stage.removeChildren();
-    this.container = new PIXI.Container();
-    this.app.stage.addChild(this.container);
   };
 }
 
