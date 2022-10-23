@@ -2,6 +2,7 @@ import { css } from "@emotion/react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../common/Button";
+import { SCALE } from "../constants";
 import { logout, selectUser } from "../features/auth/userSlice";
 import LobbyView from "../features/lobby/LobbyView";
 import Game from "../_game/classes/game";
@@ -36,7 +37,13 @@ const GamePage = () => {
       setStarted(true);
       socketHandler.connectToGameWs().then(() => {
         socketHandler.lobbyId = lobby;
-        const game = new Game(800, 600, user.username, socketHandler, lobby);
+        const game = new Game(
+          SCALE * 32,
+          SCALE * 24,
+          user.username,
+          socketHandler,
+          lobby
+        );
         gameDiv.appendChild(game.app.view);
       });
     }

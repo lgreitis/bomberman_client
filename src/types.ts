@@ -11,8 +11,8 @@ export interface ResponsePayload {
 export interface PlayerData {
   Username: string;
   Token: string;
-  LocationX: number;
-  LocationY: number;
+  X: number;
+  Y: number;
 }
 
 export interface GameUpdateData {
@@ -28,4 +28,9 @@ export type MoveDirection =
 export interface Lobby {
   lobbyId: number;
   isFull: boolean;
+}
+
+export interface Tile {
+  MapTileType: number;
+  Position: { X: number; Y: number };
 }

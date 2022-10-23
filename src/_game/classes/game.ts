@@ -2,14 +2,16 @@ import Player from "./player";
 import * as PIXI from "pixi.js";
 import Input from "./input";
 import SocketHandler from "./socketHandler";
-import { PlayerData, ResponsePayload } from "../../types";
+import { PlayerData, ResponsePayload, Tile } from "../../types";
+import World from "./world";
+import worldJson from "./world.json";
 
 interface GameData {
-  LobbyId: number;
+  // LobbyId: number;
   Players: {
-    IsConnected: boolean;
-    LocationX: number;
-    LocationY: number;
+    // IsConnected: boolean;
+    X: number;
+    Y: number;
     Token: string;
     UserId: string;
     Username: string;
@@ -27,6 +29,7 @@ class Game {
   input: Input;
   lobbyId: number;
   gameData: GameData | null;
+  worldData: Tile[];
 
   constructor(
     width: number,
@@ -42,18 +45,25 @@ class Game {
       resolution: window.devicePixelRatio || 1,
     });
 
+    this.worldData = [];
+
     this.currentPlayerName = username;
     this.appWidth = width;
     this.appHeight = height;
     this.container = new PIXI.Container();
     this.container.x = this.app.screen.width / 2;
     this.container.y = this.app.screen.height / 2;
-    this.app.stage.addChild(this.container);
     this.players = [];
     this.socket = socketHandler;
     this.input = new Input(this.socket);
     this.lobbyId = lobbyId;
     this.gameData = null;
+
+    const worldContainer = new PIXI.Container();
+    const world = new World(worldContainer);
+    this.app.stage.addChild(worldContainer);
+
+    this.app.stage.addChild(this.container);
 
     this.socket.sendConnectCommand();
 
@@ -61,14 +71,16 @@ class Game {
       const data: ResponsePayload = JSON.parse(event.data);
 
       switch (data.ResponseId) {
-        case "GameUpdate":
-          data.Data.Games.map((game: GameData) => {
-            if (game.LobbyId === this.lobbyId) {
-              this.gameData = game;
-            }
-          });
+        case "Players": {
+          this.gameData = { Players: data.Data };
+          break;
+        }
+        case "Map": {
+          this.worldData = data.Data.Map;
+          world.generate(data.Data.Map);
 
           break;
+        }
       }
     });
 
@@ -98,9 +110,9 @@ class Game {
     const fplayer = this.players.findIndex((x) => x.name === player.Username);
 
     if (fplayer === -1) {
-      this.addPlayer(player.Username, player.LocationX, player.LocationY);
+      this.addPlayer(player.Username, player.X, player.Y);
     } else {
-      this.players[fplayer].move(player.LocationX, player.LocationY);
+      this.players[fplayer].move(player.X, player.Y);
     }
   };
 
