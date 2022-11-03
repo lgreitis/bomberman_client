@@ -20,25 +20,13 @@ class World {
     const size = SCALE;
 
     tileData.forEach((el) => {
-      //   const { width, height } = this.container;
-
       const sprite = this.getTile(el.MapTileType);
-
-      // const nameText = new PIXI.Text(`${el.Position.X};${el.Position.Y}`, {
-      //   fill: "0xffffff",
-      //   fontSize: 126,
-      // });
-
-      // nameText.x = size / 2;
-      // nameText.y = size / 2;
 
       sprite.height = size;
       sprite.width = size;
 
       sprite.x = el.Position.X * sprite.height;
       sprite.y = el.Position.Y * sprite.width;
-
-      // sprite.addChild(nameText);
 
       this.container.addChild(sprite);
     });

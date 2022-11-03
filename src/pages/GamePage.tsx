@@ -27,28 +27,41 @@ const GamePage = () => {
     });
   }, []);
 
+  const [game, setGame] = useState<Game | undefined>(undefined);
+
   useEffect(() => {
     const gameDiv = document.getElementById("game");
     if (!gameDiv || !lobby || !connectionLobby) {
       return;
     }
 
-    if (connectionLobby === lobby) {
-      setStarted(true);
-      socketHandler.connectToGameWs().then(() => {
-        socketHandler.lobbyId = lobby;
-        const game = new Game(
-          SCALE * 32,
-          SCALE * 24,
-          user.username,
-          socketHandler,
-          lobby
-        );
-        gameDiv.appendChild(game.app.view);
-      });
+    if (connectionLobby !== lobby) {
+      return;
     }
 
+    setStarted(true);
+
+    socketHandler.connectToGameWs().then(() => {
+      socketHandler.lobbyId = lobby;
+
+      const game = new Game(
+        SCALE * 32,
+        SCALE * 24,
+        user.username,
+        socketHandler,
+        lobby
+      );
+
+      setGame(game);
+
+      gameDiv.appendChild(game.app.view);
+    });
+
     return () => {
+      if (game) {
+        game.destroy();
+      }
+
       gameDiv.innerHTML = "";
     };
   }, [lobby, connectionLobby]);

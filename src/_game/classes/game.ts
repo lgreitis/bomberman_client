@@ -4,12 +4,11 @@ import Input from "./input";
 import SocketHandler from "./socketHandler";
 import { PlayerData, ResponsePayload, Tile } from "../../types";
 import World from "./world";
-import worldJson from "./world.json";
+import { SCALE } from "../../constants";
+import Debug from "./debug";
 
 interface GameData {
-  // LobbyId: number;
   Players: {
-    // IsConnected: boolean;
     X: number;
     Y: number;
     Token: string;
@@ -29,7 +28,8 @@ class Game {
   input: Input;
   lobbyId: number;
   gameData: GameData | null;
-  worldData: Tile[];
+  world: World;
+  debug: Debug;
 
   constructor(
     width: number,
@@ -45,8 +45,6 @@ class Game {
       resolution: window.devicePixelRatio || 1,
     });
 
-    this.worldData = [];
-
     this.currentPlayerName = username;
     this.appWidth = width;
     this.appHeight = height;
@@ -60,37 +58,26 @@ class Game {
     this.gameData = null;
 
     const worldContainer = new PIXI.Container();
-    const world = new World(worldContainer);
+    this.world = new World(worldContainer);
     this.app.stage.addChild(worldContainer);
-
     this.app.stage.addChild(this.container);
 
     this.socket.sendConnectCommand();
-
-    this.socket.socket.addEventListener("message", (event) => {
-      const data: ResponsePayload = JSON.parse(event.data);
-
-      switch (data.ResponseId) {
-        case "Players": {
-          this.gameData = { Players: data.Data };
-          break;
-        }
-        case "Map": {
-          this.worldData = data.Data.Map;
-          world.generate(data.Data.Map);
-
-          break;
-        }
-      }
-    });
+    this.startEventListener();
 
     this.container = new PIXI.Container();
-    this.container.x = this.app.screen.width / 2;
-    this.container.y = this.app.screen.height / 2;
     this.app.stage.addChild(this.container);
+
+    this.debug = new Debug(this.app);
 
     this.app.ticker.add(this.gameLoop);
   }
+
+  destroy = () => {
+    this.stopEventListener();
+    this.app.destroy();
+    this.input.destroy();
+  };
 
   gameLoop = () => {
     if (!this.gameData) {
@@ -98,6 +85,7 @@ class Game {
     }
 
     this.updatePlayers(this.gameData.Players);
+    this.debug.updateData(this.gameData.Players, this.currentPlayerName);
   };
 
   updatePlayers = (players: PlayerData[]) => {
@@ -110,15 +98,38 @@ class Game {
     const fplayer = this.players.findIndex((x) => x.name === player.Username);
 
     if (fplayer === -1) {
-      this.addPlayer(player.Username, player.X, player.Y);
+      this.addPlayer(player.Username, player.X * SCALE, player.Y * SCALE);
     } else {
-      this.players[fplayer].move(player.X, player.Y);
+      this.players[fplayer].move(player.X * SCALE, player.Y * SCALE);
     }
   };
 
   addPlayer = (name: string, x: number, y: number) => {
     const player = new Player(name, x, y, this.container);
     this.players.push(player);
+  };
+
+  startEventListener = () => {
+    this.socket.socket.addEventListener("message", this.eventListener);
+  };
+
+  stopEventListener = () => {
+    this.socket.socket.removeEventListener("message", this.eventListener);
+  };
+
+  eventListener = (event: MessageEvent<any>) => {
+    const data: ResponsePayload = JSON.parse(event.data);
+
+    switch (data.ResponseId) {
+      case "Players": {
+        this.gameData = { Players: data.Data };
+        break;
+      }
+      case "Map": {
+        this.world.generate(data.Data.Map);
+        break;
+      }
+    }
   };
 }
 

@@ -9,8 +9,8 @@ export interface Inputs {
 
 class Input {
   socket: SocketHandler;
-
   inputs: Inputs;
+  interval: number;
 
   constructor(socket: SocketHandler) {
     this.socket = socket;
@@ -25,10 +25,12 @@ class Input {
     document.onkeydown = (e) => this.keysDown(e);
     document.onkeyup = (e) => this.keysUp(e);
 
-    setInterval(() => {
-      this.move(this.inputs);
-    }, 50);
+    this.interval = setInterval(() => this.move(this.inputs), 50);
   }
+
+  destroy = () => {
+    clearInterval(this.interval);
+  };
 
   move = (inputs: Inputs) => {
     if (

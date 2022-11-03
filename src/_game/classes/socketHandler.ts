@@ -2,13 +2,20 @@ import { GAME_WS_URL, LOBBY_WS_URL } from "../../constants";
 import { MoveDirection, Payload, ResponsePayload } from "../../types";
 import { Inputs } from "./input";
 
+enum SocketType {
+  Lobby,
+  Game,
+}
+
 class SocketHandler {
   socket: WebSocket;
   token: string;
   lobbyId: number;
+  socketType: SocketType;
 
   constructor(token: string) {
     this.socket = new WebSocket(LOBBY_WS_URL);
+    this.socketType = SocketType.Lobby;
     this.token = token;
     this.lobbyId = -1;
   }
@@ -17,6 +24,7 @@ class SocketHandler {
     return new Promise((resolve) => {
       this.socket.close();
       this.socket = new WebSocket(GAME_WS_URL);
+      this.socketType = SocketType.Game;
 
       this.socket.addEventListener("open", () => {
         resolve(undefined);
@@ -52,7 +60,6 @@ class SocketHandler {
     const payload: Payload = {
       CommandId: "MOVE",
       Data: {
-        Token: this.token,
         PositiveX: inputs.ArrowRight,
         NegativeX: inputs.ArrowLeft,
         PositiveY: inputs.ArrowDown,
