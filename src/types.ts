@@ -1,6 +1,6 @@
 export interface Payload {
   CommandId: string;
-  Data: unknown;
+  Data?: unknown;
 }
 
 export interface ResponsePayload {
@@ -11,6 +11,7 @@ export interface ResponsePayload {
 export interface PlayerData {
   Username: string;
   Token: string;
+  HealthPoints: number;
   X: number;
   Y: number;
 }
@@ -29,4 +30,9 @@ export interface Lobby {
 export interface Tile {
   MapTileType: number;
   Position: { X: number; Y: number };
+}
+
+export interface Bomb {
+  X: number;
+  Y: number;
 }

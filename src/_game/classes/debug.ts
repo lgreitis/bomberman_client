@@ -2,12 +2,10 @@ import * as PIXI from 'pixi.js';
 import { PlayerData } from '../../types';
 
 class Debug {
-  app: PIXI.Application;
   positionText: PIXI.Text;
   positionTextOverlay: PIXI.Graphics;
 
   constructor(app: PIXI.Application) {
-    this.app = app;
     const container = new PIXI.Container();
     this.positionText = new PIXI.Text('', { fontSize: 12, fill: '0xffffff' });
 
@@ -15,11 +13,11 @@ class Debug {
 
     container.addChild(this.positionTextOverlay);
     container.addChild(this.positionText);
-    this.app.stage.addChild(container);
+    app.stage.addChild(container);
   }
 
-  updateData = (players: PlayerData[], currentPlayerName: string) => {
-    const player = players.find((el) => el.Username === currentPlayerName);
+  updateData = (players: PlayerData[], currentPlayerToken: string) => {
+    const player = players.find((el) => el.Token === currentPlayerToken);
 
     if (!player) {
       return;

@@ -42,11 +42,8 @@ const GamePage = () => {
 
     socketHandler.connectToGameWs().then(() => {
       socketHandler.lobbyId = lobby;
-
-      const game = new Game(SCALE * 32, SCALE * 24, user.username, socketHandler, lobby);
-
+      const game = new Game(SCALE * 32, SCALE * 24, socketHandler, lobby);
       setGame(game);
-
       gameDiv.appendChild(game.app.view);
     });
 
@@ -54,7 +51,6 @@ const GamePage = () => {
       if (game) {
         game.destroy();
       }
-
       gameDiv.innerHTML = '';
     };
   }, [lobby, connectionLobby]);

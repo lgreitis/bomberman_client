@@ -1,4 +1,4 @@
-import { Tile } from '../../types';
+import { Bomb, Tile } from '../../types';
 import * as PIXI from 'pixi.js';
 import { SCALE } from '../../constants';
 
@@ -10,42 +10,54 @@ const ice = PIXI.Texture.from('ice.png');
 const sand = PIXI.Texture.from('sand.jpg');
 const water = PIXI.Texture.from('water.png');
 
+const bomb = PIXI.Texture.from('bomb.png');
+
 class World {
   tileData: Tile[];
-  container: PIXI.Container<PIXI.DisplayObject>;
+  tileContainer: PIXI.Container;
+  bombContainer: PIXI.Container;
 
-  constructor(container: PIXI.Container<PIXI.DisplayObject>) {
+  constructor(container: PIXI.Container) {
     this.tileData = [];
-    this.container = container;
+    this.tileContainer = new PIXI.Container();
+    this.bombContainer = new PIXI.Container();
+
+    container.addChild(this.tileContainer);
+    container.addChild(this.bombContainer);
   }
 
+  updateBombs = (bombs: Bomb[]) => {
+    this.bombContainer.removeChildren();
+
+    bombs.forEach((el) => {
+      const sprite = new PIXI.Sprite(bomb);
+
+      sprite.height = SCALE;
+      sprite.width = SCALE;
+
+      sprite.x = el.X * sprite.height;
+      sprite.y = el.Y * sprite.width;
+
+      this.bombContainer.addChild(sprite);
+    });
+  };
+
   generate = (tileData: Tile[]) => {
-    const size = SCALE;
+    this.tileContainer.removeChildren();
 
     tileData.forEach((el) => {
       const sprite = this.getTile(el.MapTileType);
 
-      sprite.height = size;
-      sprite.width = size;
+      sprite.height = SCALE;
+      sprite.width = SCALE;
 
       sprite.x = el.Position.X * sprite.height;
       sprite.y = el.Position.Y * sprite.width;
 
-      this.container.addChild(sprite);
+      this.tileContainer.addChild(sprite);
     });
   };
 
-  /**
-   * 
-   * @param tileId Grass = 1,
-        Cobblestone = 2,
-        Wood = 3,
-        Bedrock = 4,
-        Ice = 5,
-        Sand = 6,
-        Water = 7,
-   * @returns 
-   */
   getTile = (tileId: number) => {
     switch (tileId) {
       case 1: {

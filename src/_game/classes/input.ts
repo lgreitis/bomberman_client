@@ -46,6 +46,8 @@ class Input {
   };
 
   keysDown = (e: KeyboardEvent) => {
+    e.preventDefault();
+
     switch (e.key) {
       case 'ArrowRight':
         this.inputs.ArrowRight = true;
@@ -59,10 +61,15 @@ class Input {
       case 'ArrowDown':
         this.inputs.ArrowDown = true;
         break;
+      case ' ':
+        this.socket.sendBombCommand();
+        break;
     }
   };
 
   keysUp = (e: KeyboardEvent) => {
+    e.preventDefault();
+
     switch (e.key) {
       case 'ArrowRight':
         this.inputs.ArrowRight = false;

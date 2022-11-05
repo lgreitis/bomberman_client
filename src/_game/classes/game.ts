@@ -11,6 +11,7 @@ interface GameData {
   Players: {
     X: number;
     Y: number;
+    HealthPoints: number;
     Token: string;
     UserId: string;
     Username: string;
@@ -24,20 +25,13 @@ class Game {
   appWidth: number;
   appHeight: number;
   players: Player[];
-  currentPlayerName: string;
   input: Input;
   lobbyId: number;
   gameData: GameData | null;
   world: World;
   debug: Debug;
 
-  constructor(
-    width: number,
-    height: number,
-    username: string,
-    socketHandler: SocketHandler,
-    lobbyId: number
-  ) {
+  constructor(width: number, height: number, socketHandler: SocketHandler, lobbyId: number) {
     this.app = new PIXI.Application({
       width,
       height,
@@ -45,7 +39,6 @@ class Game {
       resolution: window.devicePixelRatio || 1,
     });
 
-    this.currentPlayerName = username;
     this.appWidth = width;
     this.appHeight = height;
     this.container = new PIXI.Container();
@@ -85,7 +78,7 @@ class Game {
     }
 
     this.updatePlayers(this.gameData.Players);
-    this.debug.updateData(this.gameData.Players, this.currentPlayerName);
+    this.debug.updateData(this.gameData.Players, this.socket.token);
   };
 
   updatePlayers = (players: PlayerData[]) => {
@@ -95,17 +88,23 @@ class Game {
   };
 
   updatePlayer = (player: PlayerData) => {
-    const fplayer = this.players.findIndex((x) => x.name === player.Username);
+    const fplayer = this.players.findIndex((x) => x.token === player.Token);
 
     if (fplayer === -1) {
-      this.addPlayer(player.Username, player.X * SCALE, player.Y * SCALE);
+      this.addPlayer(
+        player.Username,
+        player.Token,
+        player.HealthPoints,
+        player.X * SCALE,
+        player.Y * SCALE
+      );
     } else {
-      this.players[fplayer].move(player.X * SCALE, player.Y * SCALE);
+      this.players[fplayer].updatePlayer(player.X * SCALE, player.Y * SCALE, player.HealthPoints);
     }
   };
 
-  addPlayer = (name: string, x: number, y: number) => {
-    const player = new Player(name, x, y, this.container);
+  addPlayer = (name: string, token: string, hp: number, x: number, y: number) => {
+    const player = new Player(name, token, x, y, this.container, hp);
     this.players.push(player);
   };
 
@@ -122,15 +121,24 @@ class Game {
 
     switch (data.ResponseId) {
       case 'Players': {
+        console.log('Players', data.Data);
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this.gameData = { Players: data.Data };
         break;
       }
       case 'Map': {
+        console.log('Map', data.Data);
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this.world.generate(data.Data.Map);
+        break;
+      }
+      case 'BombUpdate': {
+        console.log('BombUpdate', data.Data);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        this.world.updateBombs(data.Data);
         break;
       }
     }

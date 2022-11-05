@@ -70,6 +70,14 @@ class SocketHandler {
     this.socket.send(JSON.stringify(payload));
   };
 
+  sendBombCommand = () => {
+    const payload: Payload = {
+      CommandId: 'USE_BOMB',
+    };
+
+    this.socket.send(JSON.stringify(payload));
+  };
+
   onStart = (cb: (lobbyId: number) => void) => {
     this.socket.addEventListener('message', (event) => {
       const data: ResponsePayload = JSON.parse(event.data);

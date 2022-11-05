@@ -5,11 +5,20 @@ const texture = PIXI.Texture.from('bomberman-sprite-sheet.png');
 
 class Player {
   name: string;
+  token: string;
   sprite: PIXI.Sprite;
+  hp: number;
   x: number;
   y: number;
 
-  constructor(name: string, x: number, y: number, container: PIXI.Container) {
+  constructor(
+    name: string,
+    token: string,
+    x: number,
+    y: number,
+    container: PIXI.Container,
+    hp: number
+  ) {
     const playerSprite = new PIXI.Sprite(texture);
 
     playerSprite.height = SCALE;
@@ -36,13 +45,32 @@ class Player {
 
     this.sprite = playerSprite;
     this.name = name;
+    this.token = token;
+    this.hp = hp;
     this.x = x;
     this.y = y;
   }
 
-  move = (x: number, y: number) => {
+  updatePlayer = (x: number, y: number, hp: number) => {
     this.sprite.x = x;
     this.sprite.y = y;
+
+    // this.sprite.tint = `0x${}`
+    switch (hp) {
+      case 3:
+        this.sprite.tint = 0xffffff;
+        break;
+      case 2:
+        this.sprite.tint = 0xfcba03;
+        break;
+      case 1:
+        this.sprite.tint = 0xff0000;
+        break;
+      default:
+        this.sprite.tint = 0x969090;
+        this.sprite.alpha = 0.5;
+        break;
+    }
   };
 }
 
