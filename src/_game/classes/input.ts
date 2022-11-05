@@ -1,4 +1,4 @@
-import SocketHandler from "./socketHandler";
+import SocketHandler from './socketHandler';
 
 export interface Inputs {
   ArrowRight: boolean;
@@ -47,16 +47,16 @@ class Input {
 
   keysDown = (e: KeyboardEvent) => {
     switch (e.key) {
-      case "ArrowRight":
+      case 'ArrowRight':
         this.inputs.ArrowRight = true;
         break;
-      case "ArrowLeft":
+      case 'ArrowLeft':
         this.inputs.ArrowLeft = true;
         break;
-      case "ArrowUp":
+      case 'ArrowUp':
         this.inputs.ArrowUp = true;
         break;
-      case "ArrowDown":
+      case 'ArrowDown':
         this.inputs.ArrowDown = true;
         break;
     }
@@ -64,16 +64,16 @@ class Input {
 
   keysUp = (e: KeyboardEvent) => {
     switch (e.key) {
-      case "ArrowRight":
+      case 'ArrowRight':
         this.inputs.ArrowRight = false;
         break;
-      case "ArrowLeft":
+      case 'ArrowLeft':
         this.inputs.ArrowLeft = false;
         break;
-      case "ArrowUp":
+      case 'ArrowUp':
         this.inputs.ArrowUp = false;
         break;
-      case "ArrowDown":
+      case 'ArrowDown':
         this.inputs.ArrowDown = false;
         break;
     }

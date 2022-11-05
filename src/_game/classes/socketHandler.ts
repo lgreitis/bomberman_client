@@ -1,6 +1,6 @@
-import { GAME_WS_URL, LOBBY_WS_URL } from "../../constants";
-import { MoveDirection, Payload, ResponsePayload } from "../../types";
-import { Inputs } from "./input";
+import { GAME_WS_URL, LOBBY_WS_URL } from '../../constants';
+import { Payload, ResponsePayload } from '../../types';
+import { Inputs } from './input';
 
 enum SocketType {
   Lobby,
@@ -26,7 +26,7 @@ class SocketHandler {
       this.socket = new WebSocket(GAME_WS_URL);
       this.socketType = SocketType.Game;
 
-      this.socket.addEventListener("open", () => {
+      this.socket.addEventListener('open', () => {
         resolve(undefined);
       });
     });
@@ -34,7 +34,7 @@ class SocketHandler {
 
   sendConnectCommand = () => {
     const payload: Payload = {
-      CommandId: "CONNECT",
+      CommandId: 'CONNECT',
       Data: {
         Token: this.token,
         LobbyId: this.lobbyId,
@@ -46,7 +46,7 @@ class SocketHandler {
 
   sendJoinCommand = (lobbyId: number, token: string) => {
     const payload: Payload = {
-      CommandId: "JOIN_LOBBY",
+      CommandId: 'JOIN_LOBBY',
       Data: {
         lobbyId: lobbyId,
         Token: token,
@@ -58,7 +58,7 @@ class SocketHandler {
 
   sendMoveCommand = (inputs: Inputs) => {
     const payload: Payload = {
-      CommandId: "MOVE",
+      CommandId: 'MOVE',
       Data: {
         PositiveX: inputs.ArrowRight,
         NegativeX: inputs.ArrowLeft,
@@ -71,10 +71,11 @@ class SocketHandler {
   };
 
   onStart = (cb: (lobbyId: number) => void) => {
-    this.socket.addEventListener("message", (event) => {
+    this.socket.addEventListener('message', (event) => {
       const data: ResponsePayload = JSON.parse(event.data);
-      if (data.ResponseId === "StartGame") {
-        cb(data.Data.LobbyId);
+      if (data.ResponseId === 'StartGame') {
+        const Data = data.Data as { LobbyId: number };
+        cb(Data.LobbyId);
       }
     });
   };

@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../../store";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../../store';
 
 interface User {
   token: string;
@@ -7,23 +7,23 @@ interface User {
 }
 
 const initialState: User = {
-  token: localStorage.getItem("token") || "",
-  username: localStorage.getItem("username") || "",
+  token: localStorage.getItem('token') || '',
+  username: localStorage.getItem('username') || '',
 };
 
 export const userSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState,
   reducers: {
     login: (state, action: PayloadAction<User>) => {
-      localStorage.setItem("token", action.payload.token);
-      localStorage.setItem("username", action.payload.username);
+      localStorage.setItem('token', action.payload.token);
+      localStorage.setItem('username', action.payload.username);
       state.token = action.payload.token;
       state.username = action.payload.username;
     },
     logout: (state) => {
-      localStorage.removeItem("username");
-      localStorage.removeItem("token");
+      localStorage.removeItem('username');
+      localStorage.removeItem('token');
       state.token = initialState.token;
       state.username = initialState.username;
       window.location.reload();

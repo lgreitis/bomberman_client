@@ -1,11 +1,11 @@
-import Player from "./player";
-import * as PIXI from "pixi.js";
-import Input from "./input";
-import SocketHandler from "./socketHandler";
-import { PlayerData, ResponsePayload, Tile } from "../../types";
-import World from "./world";
-import { SCALE } from "../../constants";
-import Debug from "./debug";
+import Player from './player';
+import * as PIXI from 'pixi.js';
+import Input from './input';
+import SocketHandler from './socketHandler';
+import { PlayerData, ResponsePayload } from '../../types';
+import World from './world';
+import { SCALE } from '../../constants';
+import Debug from './debug';
 
 interface GameData {
   Players: {
@@ -110,22 +110,26 @@ class Game {
   };
 
   startEventListener = () => {
-    this.socket.socket.addEventListener("message", this.eventListener);
+    this.socket.socket.addEventListener('message', this.eventListener);
   };
 
   stopEventListener = () => {
-    this.socket.socket.removeEventListener("message", this.eventListener);
+    this.socket.socket.removeEventListener('message', this.eventListener);
   };
 
-  eventListener = (event: MessageEvent<any>) => {
-    const data: ResponsePayload = JSON.parse(event.data);
+  eventListener = (event: MessageEvent<unknown>) => {
+    const data: ResponsePayload = JSON.parse(event.data as string);
 
     switch (data.ResponseId) {
-      case "Players": {
+      case 'Players': {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         this.gameData = { Players: data.Data };
         break;
       }
-      case "Map": {
+      case 'Map': {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         this.world.generate(data.Data.Map);
         break;
       }

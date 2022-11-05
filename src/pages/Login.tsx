@@ -1,14 +1,14 @@
-import { css } from "@emotion/react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Button from "../common/Button";
-import { authService } from "../features/auth/auth.service";
-import { login } from "../features/auth/userSlice";
-import { useAppDispatch } from "../store";
+import { css } from '@emotion/react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Button from '../common/Button';
+import { authService } from '../features/auth/auth.service';
+import { login } from '../features/auth/userSlice';
+import { useAppDispatch } from '../store';
 
 const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
   const dispatch = useAppDispatch();
 
@@ -19,7 +19,7 @@ const Login = () => {
       .login(username, password)
       .then((val) => {
         if (val.data.success) {
-          navigate("/");
+          navigate('/');
           dispatch(login({ username, token: val.data.token }));
         } else {
           setError(true);
@@ -38,8 +38,7 @@ const Login = () => {
             background-color: #ff7d7d;
             border-radius: 5px;
             padding: 5px;
-          `}
-        >
+          `}>
           An error has occured
         </div>
       )}
@@ -50,8 +49,7 @@ const Login = () => {
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit();
-        }}
-      >
+        }}>
         <input
           placeholder="Username"
           value={username}

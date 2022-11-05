@@ -1,6 +1,6 @@
-import axios from "axios";
-import { API_URL } from "../../constants";
-import { Lobby } from "../../types";
+import axios from 'axios';
+import { API_URL } from '../../constants';
+import { Lobby } from '../../types';
 
 interface GetLobbyResult {
   lobbies: Lobby[];

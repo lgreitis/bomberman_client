@@ -1,11 +1,11 @@
 export interface Payload {
   CommandId: string;
-  Data: any;
+  Data: unknown;
 }
 
 export interface ResponsePayload {
   ResponseId: string;
-  Data: any;
+  Data: unknown;
 }
 
 export interface PlayerData {
@@ -19,11 +19,7 @@ export interface GameUpdateData {
   Players: PlayerData[];
 }
 
-export type MoveDirection =
-  | "ArrowRight"
-  | "ArrowLeft"
-  | "ArrowUp"
-  | "ArrowDown";
+export type MoveDirection = 'ArrowRight' | 'ArrowLeft' | 'ArrowUp' | 'ArrowDown';
 
 export interface Lobby {
   lobbyId: number;

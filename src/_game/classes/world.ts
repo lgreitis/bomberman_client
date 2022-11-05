@@ -1,11 +1,11 @@
-import { Tile } from "../../types";
-import * as PIXI from "pixi.js";
-import { SCALE } from "../../constants";
+import { Tile } from '../../types';
+import * as PIXI from 'pixi.js';
+import { SCALE } from '../../constants';
 
-const grass = PIXI.Texture.from("grass.jpg");
-const cobblestone = PIXI.Texture.from("cobblestone.png");
-const wood = PIXI.Texture.from("wood.png");
-const bedrock = PIXI.Texture.from("bedrock.png");
+const grass = PIXI.Texture.from('grass.jpg');
+const cobblestone = PIXI.Texture.from('cobblestone.png');
+const wood = PIXI.Texture.from('wood.png');
+const bedrock = PIXI.Texture.from('bedrock.png');
 
 class World {
   tileData: Tile[];

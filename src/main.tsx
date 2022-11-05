@@ -1,11 +1,10 @@
-import { css, Global } from "@emotion/react";
-import axios from "axios";
-import React from "react";
-import ReactDOM from "react-dom/client";
-import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
-import App from "./App";
-import store from "./store";
+import { css, Global } from '@emotion/react';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App';
+import store from './store';
 
 // axios.interceptors.request.use(
 //   (config: any) => {
@@ -22,7 +21,7 @@ import store from "./store";
 //   (err) => Promise.reject(err)
 // );
 
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Global
       styles={css`

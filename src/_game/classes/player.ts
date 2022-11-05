@@ -1,7 +1,7 @@
-import * as PIXI from "pixi.js";
-import { SCALE } from "../../constants";
+import * as PIXI from 'pixi.js';
+import { SCALE } from '../../constants';
 
-const texture = PIXI.Texture.from("bomberman-sprite-sheet.png");
+const texture = PIXI.Texture.from('bomberman-sprite-sheet.png');
 
 class Player {
   name: string;
@@ -15,7 +15,7 @@ class Player {
     playerSprite.height = SCALE;
     playerSprite.width = (SCALE * 67) / 118;
 
-    const nameText = new PIXI.Text(name, { fill: "0xffffff", fontSize: 48 });
+    const nameText = new PIXI.Text(name, { fill: '0xffffff', fontSize: 48 });
     nameText.x = -nameText.width / 2;
     nameText.y = -110;
 
@@ -27,12 +27,7 @@ class Player {
     graphics.beginFill(0x000000);
     graphics.alpha = 0.5;
     const width = nameText.width + 20;
-    graphics.drawRect(
-      -width / 2,
-      -115,
-      nameText.width + 20,
-      nameText.height + 10
-    );
+    graphics.drawRect(-width / 2, -115, nameText.width + 20, nameText.height + 10);
 
     playerSprite.addChild(graphics);
     playerSprite.addChild(nameText);

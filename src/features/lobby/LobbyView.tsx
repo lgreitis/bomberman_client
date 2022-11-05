@@ -1,7 +1,7 @@
-import { css } from "@emotion/react";
-import { useEffect, useState } from "react";
-import { Lobby } from "../../types";
-import { lobbyService } from "./lobby.service";
+import { css } from '@emotion/react';
+import { useEffect, useState } from 'react';
+import { Lobby } from '../../types';
+import { lobbyService } from './lobby.service';
 
 const ButtonStyle = css`
   padding: 8px;
@@ -36,8 +36,7 @@ const LobbyView = (props: Props) => {
       css={css`
         display: flex;
         flex-direction: column;
-      `}
-    >
+      `}>
       <h1>Join a lobby</h1>
       {lobbies.map((el, i) => {
         if (el.isFull) {
@@ -49,8 +48,7 @@ const LobbyView = (props: Props) => {
             css={ButtonStyle}
             onClick={() => {
               onJoin(el.lobbyId);
-            }}
-          >
+            }}>
             <div>Lobby {el.lobbyId}</div>
           </div>
         );
@@ -66,8 +64,7 @@ const LobbyView = (props: Props) => {
           lobbyService.createLobby().then((res) => {
             onJoin(res.data.lobbyId);
           });
-        }}
-      >
+        }}>
         Create lobby
       </div>
     </div>

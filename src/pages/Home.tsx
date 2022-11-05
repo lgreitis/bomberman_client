@@ -1,8 +1,8 @@
-import styled from "@emotion/styled";
-import React from "react";
-import { Link } from "react-router-dom";
-import Button from "../common/Button";
-import BoxCenter from "../common/components/BoxCenter";
+import styled from '@emotion/styled';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import Button from '../common/Button';
+import BoxCenter from '../common/components/BoxCenter';
 
 const Container = styled(BoxCenter)`
   gap: 10px;

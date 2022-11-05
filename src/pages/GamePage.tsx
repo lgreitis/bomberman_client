@@ -1,26 +1,25 @@
-import { css } from "@emotion/react";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import Button from "../common/Button";
-import { SCALE } from "../constants";
-import { logout, selectUser } from "../features/auth/userSlice";
-import LobbyView from "../features/lobby/LobbyView";
-import Game from "../_game/classes/game";
-import SocketHandler from "../_game/classes/socketHandler";
+import { css } from '@emotion/react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Button from '../common/Button';
+import { SCALE } from '../constants';
+import { logout, selectUser } from '../features/auth/userSlice';
+import LobbyView from '../features/lobby/LobbyView';
+import Game from '../_game/classes/game';
+import SocketHandler from '../_game/classes/socketHandler';
 
 const GamePage = () => {
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
   const [lobby, setLobby] = useState<number | undefined>();
   const [connectionLobby, setConnectionLobby] = useState<number | undefined>();
-  const [socketHandler, setSocketHandler] = useState(
-    new SocketHandler(user.token)
-  );
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [socketHandler, setSocketHandler] = useState(new SocketHandler(user.token));
 
   const [started, setStarted] = useState<boolean>(false);
 
   useEffect(() => {
-    socketHandler.socket.addEventListener("open", () => {
+    socketHandler.socket.addEventListener('open', () => {
       socketHandler.onStart((lobbyId) => {
         setConnectionLobby(lobbyId);
       });
@@ -30,7 +29,7 @@ const GamePage = () => {
   const [game, setGame] = useState<Game | undefined>(undefined);
 
   useEffect(() => {
-    const gameDiv = document.getElementById("game");
+    const gameDiv = document.getElementById('game');
     if (!gameDiv || !lobby || !connectionLobby) {
       return;
     }
@@ -44,13 +43,7 @@ const GamePage = () => {
     socketHandler.connectToGameWs().then(() => {
       socketHandler.lobbyId = lobby;
 
-      const game = new Game(
-        SCALE * 32,
-        SCALE * 24,
-        user.username,
-        socketHandler,
-        lobby
-      );
+      const game = new Game(SCALE * 32, SCALE * 24, user.username, socketHandler, lobby);
 
       setGame(game);
 
@@ -62,7 +55,7 @@ const GamePage = () => {
         game.destroy();
       }
 
-      gameDiv.innerHTML = "";
+      gameDiv.innerHTML = '';
     };
   }, [lobby, connectionLobby]);
 
@@ -75,21 +68,18 @@ const GamePage = () => {
           align-items: center;
           gap: 10px;
           padding: 5px;
-        `}
-      >
+        `}>
         <div
           css={css`
             font-size: large;
-          `}
-        >
+          `}>
           Username: {user.username}
         </div>
         <button
           css={Button}
           onClick={() => {
             dispatch(logout());
-          }}
-        >
+          }}>
           Logout
         </button>
       </div>
@@ -99,8 +89,7 @@ const GamePage = () => {
           display: flex;
           justify-content: center;
           align-items: center;
-        `}
-      >
+        `}>
         {!lobby && (
           <LobbyView
             onJoin={(lobbyId) => {

@@ -1,7 +1,7 @@
-import styled from "@emotion/styled";
-import React from "react";
-import { Outlet } from "react-router-dom";
-import BoxCenter from "./components/BoxCenter";
+import styled from '@emotion/styled';
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import BoxCenter from './components/BoxCenter';
 
 const Container = styled.div`
   height: 300px;
