@@ -121,24 +121,24 @@ class Game {
 
     switch (data.ResponseId) {
       case 'Players': {
-        console.log('Players', data.Data);
+        // console.log('Players', data.Data);
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this.gameData = { Players: data.Data };
         break;
       }
       case 'Map': {
-        console.log('Map', data.Data);
+        // console.log('Map', data.Data);
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        this.world.generate(data.Data.Map);
+        this.world.updateTiles(data.Data.Map);
         break;
       }
-      case 'BombUpdate': {
-        console.log('BombUpdate', data.Data);
+      case 'TextureUpdate': {
+        console.log('TextureUpdate', data.Data);
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        this.world.updateBombs(data.Data);
+        this.world.updateTextures(data.Data);
         break;
       }
     }

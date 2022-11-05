@@ -1,6 +1,7 @@
-import { Bomb, Tile } from '../../types';
+import { MapTexture, TextureType, Tile } from '../../types';
 import * as PIXI from 'pixi.js';
 import { SCALE } from '../../constants';
+import { Container } from 'pixi.js';
 
 const grass = PIXI.Texture.from('grass.jpg');
 const cobblestone = PIXI.Texture.from('cobblestone.png');
@@ -11,6 +12,7 @@ const sand = PIXI.Texture.from('sand.jpg');
 const water = PIXI.Texture.from('water.png');
 
 const bomb = PIXI.Texture.from('bomb.png');
+const lava = PIXI.Texture.from('lava.png');
 
 class World {
   tileData: Tile[];
@@ -26,23 +28,31 @@ class World {
     container.addChild(this.bombContainer);
   }
 
-  updateBombs = (bombs: Bomb[]) => {
+  updateTextures = (MapTextures: MapTexture[]) => {
     this.bombContainer.removeChildren();
 
-    bombs.forEach((el) => {
-      const sprite = new PIXI.Sprite(bomb);
+    MapTextures.forEach((el) => {
+      const sprite = this.getTexture(el.TextureType, el.TimeLeft || 10000000000);
+
+      sprite.loop = false;
+
+      sprite.onComplete = () => {
+        sprite.destroy();
+      };
 
       sprite.height = SCALE;
       sprite.width = SCALE;
 
-      sprite.x = el.X * sprite.height;
-      sprite.y = el.Y * sprite.width;
+      sprite.x = el.Position.X * sprite.height;
+      sprite.y = el.Position.Y * sprite.width;
+
+      sprite.play();
 
       this.bombContainer.addChild(sprite);
     });
   };
 
-  generate = (tileData: Tile[]) => {
+  updateTiles = (tileData: Tile[]) => {
     this.tileContainer.removeChildren();
 
     tileData.forEach((el) => {
@@ -56,6 +66,17 @@ class World {
 
       this.tileContainer.addChild(sprite);
     });
+  };
+
+  getTexture = (texture: TextureType, time: number) => {
+    switch (texture) {
+      case TextureType.Fire: {
+        return new PIXI.AnimatedSprite([{ texture: lava, time }], true);
+      }
+      case TextureType.RegularBomb: {
+        return new PIXI.AnimatedSprite([{ texture: bomb, time }], true);
+      }
+    }
   };
 
   getTile = (tileId: number) => {

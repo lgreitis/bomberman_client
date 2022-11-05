@@ -32,7 +32,13 @@ export interface Tile {
   Position: { X: number; Y: number };
 }
 
-export interface Bomb {
-  X: number;
-  Y: number;
+export enum TextureType {
+  'RegularBomb' = 1,
+  'Fire' = 2,
+}
+
+export interface MapTexture {
+  TextureType: TextureType;
+  Position: { X: number; Y: number };
+  TimeLeft?: number;
 }
