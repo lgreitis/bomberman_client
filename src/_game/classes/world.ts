@@ -6,6 +6,9 @@ const grass = PIXI.Texture.from('grass.jpg');
 const cobblestone = PIXI.Texture.from('cobblestone.png');
 const wood = PIXI.Texture.from('wood.png');
 const bedrock = PIXI.Texture.from('bedrock.png');
+const ice = PIXI.Texture.from('ice.png');
+const sand = PIXI.Texture.from('sand.jpg');
+const water = PIXI.Texture.from('water.png');
 
 class World {
   tileData: Tile[];
@@ -32,6 +35,17 @@ class World {
     });
   };
 
+  /**
+   * 
+   * @param tileId Grass = 1,
+        Cobblestone = 2,
+        Wood = 3,
+        Bedrock = 4,
+        Ice = 5,
+        Sand = 6,
+        Water = 7,
+   * @returns 
+   */
   getTile = (tileId: number) => {
     switch (tileId) {
       case 1: {
@@ -45,6 +59,15 @@ class World {
       }
       case 4: {
         return new PIXI.Sprite(bedrock);
+      }
+      case 5: {
+        return new PIXI.Sprite(ice);
+      }
+      case 6: {
+        return new PIXI.Sprite(sand);
+      }
+      case 7: {
+        return new PIXI.Sprite(water);
       }
       default: {
         return new PIXI.Sprite(grass);
