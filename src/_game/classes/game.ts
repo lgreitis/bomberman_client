@@ -121,7 +121,7 @@ class Game {
 
     switch (data.ResponseId) {
       case 'Players': {
-        console.log('Players', data.Data);
+        // console.log('Players', data.Data);
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this.gameData = { Players: data.Data };

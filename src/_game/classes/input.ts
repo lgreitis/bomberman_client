@@ -64,6 +64,9 @@ class Input {
       case ' ':
         this.socket.sendBombCommand();
         break;
+      case 'z':
+        this.socket.sendUndoCommand();
+        break;
     }
   };
 

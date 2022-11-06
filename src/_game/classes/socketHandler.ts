@@ -78,6 +78,14 @@ class SocketHandler {
     this.socket.send(JSON.stringify(payload));
   };
 
+  sendUndoCommand = () => {
+    const payload: Payload = {
+      CommandId: 'UNDO_BOMB',
+    };
+
+    this.socket.send(JSON.stringify(payload));
+  };
+
   onStart = (cb: (lobbyId: number) => void) => {
     this.socket.addEventListener('message', (event) => {
       const data: ResponsePayload = JSON.parse(event.data);

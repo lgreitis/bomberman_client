@@ -12,6 +12,7 @@ const water = PIXI.Texture.from('water.png');
 
 const bomb = PIXI.Texture.from('bomb.png');
 const lava = PIXI.Texture.from('lava.png');
+const tnt = PIXI.Texture.from('tnt.png');
 
 class World {
   tileData: Tile[];
@@ -39,11 +40,17 @@ class World {
         sprite.destroy();
       };
 
-      sprite.height = SCALE;
-      sprite.width = SCALE;
-
-      sprite.x = el.Position.X * sprite.height;
-      sprite.y = el.Position.Y * sprite.width;
+      if (el.TextureType == TextureType.Prop) {
+        sprite.height = SCALE / 2;
+        sprite.width = SCALE / 2;
+        sprite.x = el.Position.X * SCALE + SCALE / 4;
+        sprite.y = el.Position.Y * SCALE + SCALE / 4;
+      } else {
+        sprite.height = SCALE;
+        sprite.width = SCALE;
+        sprite.x = el.Position.X * SCALE;
+        sprite.y = el.Position.Y * SCALE;
+      }
 
       sprite.play();
 
@@ -74,6 +81,9 @@ class World {
       }
       case TextureType.RegularBomb: {
         return new PIXI.AnimatedSprite([{ texture: bomb, time }], true);
+      }
+      case TextureType.Prop: {
+        return new PIXI.AnimatedSprite([{ texture: tnt, time }], true);
       }
     }
   };

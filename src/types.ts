@@ -35,6 +35,7 @@ export interface Tile {
 export enum TextureType {
   'RegularBomb' = 1,
   'Fire' = 2,
+  'Prop' = 3,
 }
 
 export interface MapTexture {
