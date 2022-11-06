@@ -121,7 +121,7 @@ class Game {
 
     switch (data.ResponseId) {
       case 'Players': {
-        // console.log('Players', data.Data);
+        console.log('Players', data.Data);
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this.gameData = { Players: data.Data };
@@ -135,7 +135,7 @@ class Game {
         break;
       }
       case 'TextureUpdate': {
-        console.log('TextureUpdate', data.Data);
+        // console.log('TextureUpdate', data.Data);
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this.world.updateTextures(data.Data);

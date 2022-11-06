@@ -1,7 +1,6 @@
 import { MapTexture, TextureType, Tile } from '../../types';
 import * as PIXI from 'pixi.js';
 import { SCALE } from '../../constants';
-import { Container } from 'pixi.js';
 
 const grass = PIXI.Texture.from('grass.jpg');
 const cobblestone = PIXI.Texture.from('cobblestone.png');
