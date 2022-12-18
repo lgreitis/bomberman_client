@@ -13,9 +13,14 @@ class SocketHandler {
   lobbyId: number;
   socketType: SocketType;
 
-  constructor(token: string) {
-    this.socket = new WebSocket(LOBBY_WS_URL);
-    this.socketType = SocketType.Lobby;
+  constructor(token: string, toGameWs?: boolean) {
+    if (toGameWs) {
+      this.socket = new WebSocket(GAME_WS_URL);
+      this.socketType = SocketType.Game;
+    } else {
+      this.socket = new WebSocket(LOBBY_WS_URL);
+      this.socketType = SocketType.Lobby;
+    }
     this.token = token;
     this.lobbyId = -1;
   }

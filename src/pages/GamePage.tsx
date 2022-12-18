@@ -18,6 +18,7 @@ const GamePage = () => {
   const [socketHandler, setSocketHandler] = useState<SocketHandler | undefined>();
   const [messages, setMessages] = useState<string[]>([]);
   const [consoleText, setConsoleText] = useState<string>('');
+  const [blocked, setBlocked] = useState(false);
 
   const [started, setStarted] = useState<boolean>(false);
 
@@ -36,9 +37,11 @@ const GamePage = () => {
 
   useEffect(() => {
     const gameDiv = document.getElementById('game');
-    if (!gameDiv || !lobby || !connectionLobby || !socketHandler || started) {
+    if (!gameDiv || !lobby || !connectionLobby || !socketHandler || started || blocked) {
       return;
     }
+
+    console.log('this has to rerun');
 
     if (connectionLobby !== lobby) {
       return;
@@ -57,6 +60,18 @@ const GamePage = () => {
         switch (data.ResponseId) {
           case 'MessagesUpdate': {
             setMessages((prev) => prev.concat(data.Data as string[]));
+            break;
+          }
+          case 'Blocked': {
+            setStarted(false);
+            setConnectionLobby(undefined);
+            setLobby(undefined);
+            setBlocked(true);
+            break;
+          }
+          case 'Reconnect': {
+            socketHandler.sendConnectCommand();
+            break;
           }
         }
       });
@@ -109,6 +124,25 @@ const GamePage = () => {
           display: flex;
           justify-content: center;
         `}>
+        {blocked && (
+          <div
+            css={css`
+              display: flex;
+              align-items: center;
+              flex-direction: column;
+              width: 100%;
+            `}>
+            <h1>You have been killed or blocked</h1>
+            <button
+              css={Button}
+              onClick={() => {
+                window.location.reload();
+              }}>
+              Go back to lobby selection
+            </button>
+          </div>
+        )}
+        {lobby && !started && <h1>Waiting for players...</h1>}
         <div
           id="game"
           css={css`
@@ -128,7 +162,6 @@ const GamePage = () => {
               }}
             />
           )}
-          {lobby && !started && <h1>Waiting for players...</h1>}
         </div>
         {lobby && started && (
           <div
