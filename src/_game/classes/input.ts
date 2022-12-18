@@ -46,19 +46,21 @@ class Input {
   };
 
   keysDown = (e: KeyboardEvent) => {
-    e.preventDefault();
-
     switch (e.key) {
       case 'ArrowRight':
+        e.preventDefault();
         this.inputs.ArrowRight = true;
         break;
       case 'ArrowLeft':
+        e.preventDefault();
         this.inputs.ArrowLeft = true;
         break;
       case 'ArrowUp':
+        e.preventDefault();
         this.inputs.ArrowUp = true;
         break;
       case 'ArrowDown':
+        e.preventDefault();
         this.inputs.ArrowDown = true;
         break;
       case ' ':

@@ -118,24 +118,21 @@ class Game {
 
   eventListener = (event: MessageEvent<unknown>) => {
     const data: ResponsePayload = JSON.parse(event.data as string);
-
+    console.log(data.ResponseId, ': ', data.Data);
     switch (data.ResponseId) {
       case 'Players': {
-        // console.log('Players', data.Data);
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this.gameData = { Players: data.Data };
         break;
       }
       case 'Map': {
-        // console.log('Map', data.Data);
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this.world.updateTiles(data.Data.Map);
         break;
       }
       case 'TextureUpdate': {
-        // console.log('TextureUpdate', data.Data);
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this.world.updateTextures(data.Data);

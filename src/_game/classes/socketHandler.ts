@@ -2,7 +2,7 @@ import { GAME_WS_URL, LOBBY_WS_URL } from '../../constants';
 import { Payload, ResponsePayload } from '../../types';
 import { Inputs } from './input';
 
-enum SocketType {
+export enum SocketType {
   Lobby,
   Game,
 }
@@ -81,6 +81,17 @@ class SocketHandler {
   sendUndoCommand = () => {
     const payload: Payload = {
       CommandId: 'UNDO_BOMB',
+    };
+
+    this.socket.send(JSON.stringify(payload));
+  };
+
+  sendConsoleCommand = (text: string) => {
+    const payload: Payload = {
+      CommandId: 'EXECUTE_COMMAND',
+      Data: {
+        CommandText: text,
+      },
     };
 
     this.socket.send(JSON.stringify(payload));
